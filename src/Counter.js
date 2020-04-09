@@ -12,6 +12,10 @@ function setStateInLocalStorage() {
   localStorage.setItem('count', JSON.stringify(this.state));
 }
 
+function updateDocTitle() {
+  document.title = `count: ${this.state.count}`;
+}
+
 // helps with testing
 const increment = (state, props) => {
   const { step, max } = props;
@@ -27,6 +31,7 @@ class Counter extends Component {
     // };
     this.state = getStateFromLocalStorage();
     this.decrement = this.decrement.bind(this);
+    this.updateDocTitle = updateDocTitle.bind(this);
   }
 
   increment = () => {
@@ -41,7 +46,7 @@ class Counter extends Component {
     //   if (state.count >= max) return;
     //   return { count: state.count + step };
     // });
-    this.setState(increment);
+    this.setState(increment, updateDocTitle);
   };
 
   decrement() {
@@ -62,7 +67,10 @@ class Counter extends Component {
   }
 
   reset() {
-    this.setState({ count: 0 });
+    this.setState(
+      { count: 0 },
+      () => (document.title = `count:${this.state.count}`),
+    );
   }
 
   render() {
